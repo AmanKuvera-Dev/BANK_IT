@@ -27,36 +27,56 @@ namespace myBank
 
         private List<Transaction> allTransactions = new List<Transaction>();
 
-        public void BankAccountDeposit(decimal depAmt, string note)
+        public void BankAccountDeposit(decimal depAmt, string note, string name, string num)
         {
-            if (depAmt <= 0)
+            try
             {
-                throw new ArgumentOutOfRangeException(nameof(depAmt), "Amount of deposit must be positive");
+                if (depAmt <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(depAmt), "Amount of deposit must be positive");
+                }
+                var deposit = new Transaction(depAmt, DateTime.Now, note, Number);
+                allTransactions.Add(deposit);
+                Console.WriteLine($"Account {num} owned by {name} was credited with ${depAmt}");
             }
-            var deposit = new Transaction(depAmt,DateTime.Now, note, Number);
-            allTransactions.Add(deposit);
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
         }
 
-        public void BankAccountWithdraw(decimal withAmt, string note)
+        public void BankAccountWithdraw(decimal withAmt, string note, string name, string num)
         {
-            if (withAmt <= 0)
+            try
             {
-                throw new ArgumentOutOfRangeException(nameof(withAmt), "Amount of withdrawal must be positive");
+                if (withAmt <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(withAmt), "Amount of withdrawal must be positive");
+                }
+
+                if (Balance - withAmt < 0)
+                {
+                    throw new InvalidOperationException("Not sufficient funds for this withdrawal");
+                }
+                var withdrawal = new Transaction(-withAmt, DateTime.Now, note, Number);
+                allTransactions.Add(withdrawal);
+                Console.WriteLine($"Account {num} owned by {name} was credited with ${withAmt}");
             }
-            if (Balance - withAmt < 0)
+            catch (Exception e)
             {
-                throw new InvalidOperationException("Not sufficient funds for this withdrawal");
+                Console.WriteLine(e);
             }
-            var withdrawal = new Transaction(-withAmt, DateTime.Now, note, Number);
-            allTransactions.Add(withdrawal);
         }
 
         public void BankAccountDetails(string name, decimal initialBalance)
         {
             this.Owner = name;
-            BankAccountDeposit(initialBalance, "Initial Balance");
             this.Number = accountNumberSeed.ToString();
             accountNumberSeed++;
+            Console.WriteLine($"Account {Number} was created for {Owner}");
+            BankAccountDeposit(initialBalance, "Initial Balance", name, Number);
+            
         }
 
 

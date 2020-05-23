@@ -21,7 +21,6 @@ namespace myBank
                 var Account = new BankAccount();
                 Account.BankAccountDetails(name, Convert.ToDecimal(iniAmt));
                 allAccounts.Add(Account);
-                Console.WriteLine($"Account {Account.Number} was created for {Account.Owner} with Balance: {Account.Balance} ");
                 Console.ReadLine();
             }
             void depositAmount()
@@ -36,8 +35,7 @@ namespace myBank
                 {
                     if (item.Owner == name)
                     {
-                        item.BankAccountDeposit(Convert.ToDecimal(depAmt), dnote);
-                        Console.WriteLine($"Account {item.Number} was credited with ${item.Owner}");
+                        item.BankAccountDeposit(Convert.ToDecimal(depAmt), dnote, item.Owner, item.Number);
                         Console.WriteLine($"Your Balance is: {item.Balance}");
                         Console.ReadLine();
                     }
@@ -61,8 +59,7 @@ namespace myBank
                 {
                     if (item.Owner == name)
                     {
-                        item.BankAccountWithdraw(Convert.ToDecimal(withAmt), withnote);
-                        Console.WriteLine($"Account {item.Number} owned by {item.Owner} was credited with ${withAmt}");
+                        item.BankAccountWithdraw(Convert.ToDecimal(withAmt), withnote, item.Owner, item.Number);
                         Console.WriteLine($"Your Balance is: {item.Balance}");
                         Console.ReadLine();
                     }
@@ -77,27 +74,29 @@ namespace myBank
             {
                 Console.WriteLine("\n Enter Owner's Name: ");
                 string name = Console.ReadLine();
+                int x = 0;
                 foreach (var item in allAccounts)
                 {
                     if (item.Owner == name)
                     {
-                        
                         string rep = item.GetAccountHistory();
-                        Console.WriteLine($"Account Summary:\n{rep}\n");
+                        Console.WriteLine($"\nAccount Summary:\n{rep}\n");
                         Console.WriteLine($"Your Balance is: {item.Balance}");
-                        Console.ReadLine();
+                        x = 0;
+                        break;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid Details!\n\n");
+                        x = 1;
+                        continue;
                     }
                 }
+                if(x==1)
+                {
+                    Console.WriteLine("Invalid Details!");
+                }
+                Console.ReadLine();
             }
-
-
-
-
-
 
             while (true)
             {
